@@ -4,17 +4,14 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
     branches: [main]
-
   push:
     branches: [main]
-
   workflow_dispatch: {}
 
 permissions:
   contents: write
 
 jobs:
-
   bump-version:
     runs-on: ubuntu-latest
     steps:
@@ -25,8 +22,7 @@ jobs:
           NEXT=$((LAST + 1))
           FECHA=$(date '+%d/%m/%Y %H:%M')
           echo "- AppVersion-$NEXT - $FECHA" >> README.md
-                - name: Commit y push del README
-
+      - name: Commit y push del README
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -34,15 +30,13 @@ jobs:
           git commit -m "docs: bump de versión" || echo "Sin cambios que commitear"
           git push || echo "Nada que subir"
 
-
-
   validate-prod:
     needs: bump-version
     runs-on: self-hosted
-
     steps:
       - uses: actions/checkout@v4
       - name: Validar entorno de producción
+        shell: pwsh
         env:
           TOKEN: ${{ secrets.PROD_TOKEN }}
         run: |
